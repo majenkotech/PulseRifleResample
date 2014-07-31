@@ -34,8 +34,6 @@
 
 #include "sounds.h"
 
-#pragma parameter board=prfmv2-575
-
 PWMAudio sound(AUDIO, 11025, AMP);
 LEDMux display(8, 2, 2000);
 
