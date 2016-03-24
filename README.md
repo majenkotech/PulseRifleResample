@@ -1,4 +1,4 @@
-PuseRifleStd2
-=============
+PuseRifleResample
+=================
 
-Standard pulse rifle firmware
+New sample structure and new samples for the M41A Pulse Rifle FX board
