@@ -34,7 +34,7 @@
 
 #include "sounds.h"
 
-PWMAudio sound(AUDIO, 11025, AMP);
+PWMAudio sound(AUDIO, 22050, AMP);
 LEDMux display(8, 2, 2000);
 
 DebouncedInput prTrigger(IO0, 10, true);
@@ -74,6 +74,7 @@ void setup() {
     display.begin();
     display.print("\n");
     display.print(prAmmo);
+
 }
 
 void loop() {
@@ -119,10 +120,10 @@ void loop() {
             if (prAmmo < 100) {
                 display.print("\n");
                 display.print(prAmmo);
-                sound.queueSample(load_click, load_click_len, 0, 0);
+                sound.queueSample(load_click, (int)&load_click_len/2, 0, 0);
 
             } else {
-                display.print("\n--");
+                display.print("\n00");
             }
         }
     }
@@ -156,15 +157,15 @@ void loop() {
 
     if (magazine.changed()) {
         if (magazine.read() == LOW) {
-            sound.queueSingleSample(magazine_insert, magazine_insert_len, 0, 0);
-            prAmmo = 104;
+            sound.queueSingleSample(magazine_insert, (int)&magazine_insert_len/2, 0, 0);
+            prAmmo = 99;
             glAmmo = 5;
 
         } else {
-            sound.queueSingleSample(magazine_remove, magazine_remove_len, 0, 0);
+            sound.queueSingleSample(magazine_remove, (int)&magazine_remove_len/2, 0, 0);
             prAmmo = 0;
             glAmmo = 0;
-            display.print("\n--");
+            display.print("\n00");
         }
     }
 
@@ -172,10 +173,10 @@ void loop() {
 
         if (glRack.read() == LOW) {
             if (glBreech == 1) {
-                sound.queueSingleSample(gl_rack_pull, gl_rack_pull_len, 0, 0);
+                sound.queueSingleSample(gl_rack_pull, (int)&gl_rack_pull_len/2, 0, 0);
 
             } else {
-                sound.queueSingleSample(gl_rack_pull_empty, gl_rack_pull_empty_len, 0, 0);
+                sound.queueSingleSample(gl_rack_pull_empty, (int)&gl_rack_pull_empty_len/2, 0, 0);
             }
 
             glBreech = 0;
@@ -189,10 +190,10 @@ void loop() {
                 glAmmo--;
                 glBreech = 1;
                 display.setDecimalPoint(0, HIGH);
-                sound.queueSingleSample(gl_rack_push, gl_rack_push_len, 0, 0);
+                sound.queueSingleSample(gl_rack_push, (int)&gl_rack_push_len/2, 0, 0);
 
             } else {
-                sound.queueSingleSample(gl_rack_push_empty, gl_rack_push_empty_len, 0, 0);
+                sound.queueSingleSample(gl_rack_push_empty, (int)&gl_rack_push_empty_len/2, 0, 0);
             }
 
             sprintf(t, "\n%02d", glAmmo);
@@ -207,11 +208,11 @@ void loop() {
                 glBreech = 0;
                 display.setDecimalPoint(0, LOW);
                 glFlash = 255;
-                sound.queueSample(gl_fire, gl_fire_len, 0, 0);
-                sound.queueSample(gl_boom, gl_boom_len, 2000 + (rand() % 10000), (rand() % 100) - 50);
+                sound.queueSample(gl_fire, (int)&gl_fire_len/2, 0, 0);
+                sound.queueSample(gl_boom, (int)&gl_boom_len/2, 2000 + (rand() % 10000), (rand() % 100) - 50);
 
             } else {
-                sound.queueSample(pr_click, pr_click_len, 0, 0);
+                sound.queueSample(load_click, (int)&load_click_len/2, 0, 0);
             }
         }
     }
@@ -222,7 +223,7 @@ void firePulseRifle() {
 
     if (prAmmo > 0 && prAmmo <= 95) {
         prAmmo --;
-        sound.queueSample(pr_fire, pr_fire_len, 0, prSweep * 4);
+        sound.queueSample(pr_fire, (int)&pr_fire_len/2, 0, prSweep * 4);
 
         if (prSweepCount > 3 && prSweepCount < 10) {
             prSweep += prSweepStep;
@@ -234,6 +235,8 @@ void firePulseRifle() {
         prFlash = 255;
 
     } else {
-        sound.queueSample(pr_click, pr_click_len, 0, 0);
+        sound.queueSample(load_click, (int)&load_click_len/2, 0, 0);
     }
 }
+
+int magazineread() { return LOW; }
